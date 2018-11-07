@@ -1,1 +1,1 @@
-export * from './elasticlog.classes.elasticlog';
+export * from './elasticsearch.classes.elasticsearch';

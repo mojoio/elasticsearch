@@ -1,5 +1,5 @@
 {
-  "name": "@pushrocks/elasticlog",
+  "name": "@mojoio/elasticsearch",
   "version": "1.0.16",
   "private": false,
   "description": "log to elasticsearch in a kibana compatible format",
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@pushrocks/smartdelay": "^2.0.2",
-    "@pushrocks/smartlog-interfaces": "^2.0.1",
+    "@pushrocks/smartlog-interfaces": "^2.0.2",
     "@types/elasticsearch": "^5.0.28",
     "elasticsearch": "^15.2.0"
   }

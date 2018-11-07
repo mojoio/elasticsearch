@@ -1,9 +1,9 @@
 // interfaces
 import { Client as ElasticClient } from 'elasticsearch';
-import { ILogContext, ILogPackage } from '@pushrocks/smartlog-interfaces';
+import { ILogContext, ILogPackage, ILogDestination } from '@pushrocks/smartlog-interfaces';
 
 // other classes
-import { LogScheduler } from './elasticlog.classes.logscheduler';
+import { LogScheduler } from './elasticsearch.classes.logscheduler';
 
 export interface IStandardLogParams {
   message: string;
@@ -18,7 +18,7 @@ export interface IElasticLogConstructorOptions {
   pass?: string;
 }
 
-export class ElasticLog<T> {
+export class ElasticSearch<T> {
   client: ElasticClient;
   logScheduler = new LogScheduler(this);
 
@@ -58,17 +58,13 @@ export class ElasticLog<T> {
     }
     this.client.index(
       {
-        index: `logstash-${now.getFullYear()}.${('0' + (now.getMonth() + 1)).slice(-2)}.${(
+        index: `smartlog-${now.getFullYear()}.${('0' + (now.getMonth() + 1)).slice(-2)}.${(
           '0' + now.getDate()
         ).slice(-2)}`,
         type: 'log',
         body: {
-          '@timestamp': now.toISOString(),
-          zone: logPackageArg.context.zone,
-          container: logPackageArg.context.containerName,
-          environment: logPackageArg.context.environment,
-          severity: logPackageArg.level,
-          message: logPackageArg.message
+          '@timestamp': new Date(logPackageArg.timestamp).toISOString(),
+          ...logPackageArg
         }
       },
       (error, response) => {
@@ -81,5 +77,13 @@ export class ElasticLog<T> {
         }
       }
     );
+  }
+
+  get logDestination (): ILogDestination {
+    return {
+      handleLog: (smartlogPackageArg: ILogPackage) => {
+        this.log(smartlogPackageArg);
+      }
+    }
   }
 }

@@ -1,11 +1,11 @@
-import { ElasticLog, IStandardLogParams } from './elasticlog.classes.elasticlog';
+import { ElasticSearch, IStandardLogParams } from './elasticsearch.classes.elasticsearch';
 
 export class LogScheduler {
-  elasticLogRef: ElasticLog<any>;
+  elasticLogRef: ElasticSearch<any>;
   logsScheduled = false;
   logStorage: any[] = [];
 
-  constructor(elasticLogRefArg: ElasticLog<any>) {
+  constructor(elasticLogRefArg: ElasticSearch<any>) {
     this.elasticLogRef = elasticLogRefArg;
   }
 
