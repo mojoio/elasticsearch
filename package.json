@@ -23,8 +23,10 @@
     "tslint-config-prettier": "^1.15.0"
   },
   "dependencies": {
+    "@pushrocks/lik": "^3.0.1",
     "@pushrocks/smartdelay": "^2.0.2",
     "@pushrocks/smartlog-interfaces": "^2.0.2",
+    "@pushrocks/smartpromise": "^2.0.5",
     "@types/elasticsearch": "^5.0.28",
     "elasticsearch": "^15.2.0"
   }

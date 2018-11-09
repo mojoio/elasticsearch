@@ -3,7 +3,8 @@ import { Client as ElasticClient } from 'elasticsearch';
 import { ILogContext, ILogPackage, ILogDestination } from '@pushrocks/smartlog-interfaces';
 
 // other classes
-import { LogScheduler } from './elasticsearch.classes.logscheduler';
+import { ElasticScheduler } from './elasticsearch.classes.elasticscheduler';
+import { ElasticIndex } from './elasticsearch.classes.elasticindex';
 
 export interface IStandardLogParams {
   message: string;
@@ -19,8 +20,9 @@ export interface IElasticLogConstructorOptions {
 }
 
 export class ElasticSearch<T> {
-  client: ElasticClient;
-  logScheduler = new LogScheduler(this);
+  public client: ElasticClient;
+  public elasticScheduler = new ElasticScheduler(this);
+  public elasticIndex: ElasticIndex = new ElasticIndex(this);
 
   /**
    * sets up an instance of Elastic log
@@ -52,15 +54,21 @@ export class ElasticSearch<T> {
 
   public async log(logPackageArg: ILogPackage, scheduleOverwrite = false) {
     const now = new Date();
-    if (this.logScheduler.logsScheduled && !scheduleOverwrite) {
-      this.logScheduler.scheduleLog(logPackageArg);
+    const indexToUse = `smartlog-${now.getFullYear()}.${('0' + (now.getMonth() + 1)).slice(-2)}.${(
+      '0' + now.getDate()
+    ).slice(-2)}`;
+
+
+    if (this.elasticScheduler.docsScheduled && !scheduleOverwrite) {
+      this.elasticScheduler.scheduleDoc(logPackageArg);
       return;
     }
+
+    await this.elasticIndex.ensureIndex(indexToUse);
+
     this.client.index(
       {
-        index: `smartlog-${now.getFullYear()}.${('0' + (now.getMonth() + 1)).slice(-2)}.${(
-          '0' + now.getDate()
-        ).slice(-2)}`,
+        index: indexToUse,
         type: 'log',
         body: {
           '@timestamp': new Date(logPackageArg.timestamp).toISOString(),
@@ -71,7 +79,7 @@ export class ElasticSearch<T> {
         if (error) {
           console.log('ElasticLog encountered an error:');
           console.log(error);
-          this.logScheduler.addFailedLog(logPackageArg);
+          this.elasticScheduler.addFailedDoc(logPackageArg);
         } else {
           console.log(`ElasticLog: ${logPackageArg.message}`);
         }
