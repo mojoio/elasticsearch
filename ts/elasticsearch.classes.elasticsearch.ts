@@ -11,7 +11,9 @@ export interface IStandardLogParams {
   severity: string;
 }
 
-export interface IElasticLogConstructorOptions {
+export interface IElasticSearchConstructorOptions {
+  indexPrefix: string;
+  indexRetention: number;
   port: number;
   domain: string;
   ssl: boolean;
@@ -24,22 +26,27 @@ export class ElasticSearch<T> {
   public elasticScheduler = new ElasticScheduler(this);
   public elasticIndex: ElasticIndex = new ElasticIndex(this);
 
+  public indexPrefix: string;
+  public indexRetention: number;
+
   /**
    * sets up an instance of Elastic log
    * @param optionsArg
    */
-  constructor(optionsArg: IElasticLogConstructorOptions) {
+  constructor(optionsArg: IElasticSearchConstructorOptions) {
     this.client = new ElasticClient({
       host: this.computeHostString(optionsArg),
       log: 'trace'
     });
+    this.indexPrefix = optionsArg.indexPrefix;
+    this.indexRetention = optionsArg.indexRetention;
   }
 
   /**
    * computes the host string from the constructor options
    * @param optionsArg
    */
-  private computeHostString(optionsArg: IElasticLogConstructorOptions): string {
+  private computeHostString(optionsArg: IElasticSearchConstructorOptions): string {
     let hostString = `${optionsArg.domain}:${optionsArg.port}`;
     if (optionsArg.user && optionsArg.pass) {
       hostString = `${optionsArg.user}:${optionsArg.pass}@${hostString}`;
@@ -54,7 +61,7 @@ export class ElasticSearch<T> {
 
   public async log(logPackageArg: ILogPackage, scheduleOverwrite = false) {
     const now = new Date();
-    const indexToUse = `smartlog-${now.getFullYear()}.${('0' + (now.getMonth() + 1)).slice(-2)}.${(
+    const indexToUse = `${this.indexPrefix}-${now.getFullYear()}.${('0' + (now.getMonth() + 1)).slice(-2)}.${(
       '0' + now.getDate()
     ).slice(-2)}`;
 

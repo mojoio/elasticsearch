@@ -8,6 +8,8 @@ let testElasticLog: elasticsearch.ElasticSearch<any>;
 
 tap.test('first test', async () => {
   testElasticLog = new elasticsearch.ElasticSearch({
+    indexPrefix: 'smartlog',
+    indexRetention: 7,
     domain: process.env.ELK_DOMAIN,
     port: parseInt(process.env.ELK_PORT, 10),
     ssl: true,
