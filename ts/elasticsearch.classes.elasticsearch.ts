@@ -36,7 +36,7 @@ export class ElasticSearch<T> {
   constructor(optionsArg: IElasticSearchConstructorOptions) {
     this.client = new ElasticClient({
       host: this.computeHostString(optionsArg),
-      log: 'trace'
+      // log: 'trace'
     });
     this.indexPrefix = optionsArg.indexPrefix;
     this.indexRetention = optionsArg.indexRetention;
@@ -88,7 +88,7 @@ export class ElasticSearch<T> {
           console.log(error);
           this.elasticScheduler.addFailedDoc(logPackageArg);
         } else {
-          console.log(`ElasticLog: ${logPackageArg.message}`);
+          // console.log(`ElasticLog: ${logPackageArg.message}`);
         }
       }
     );
