@@ -15,6 +15,7 @@ export class ElasticIndex {
   public async ensureIndex(indexArg: string) {
     const done = plugins.smartpromise.defer();
     if (this.stringmap.checkString(indexArg)) {
+      done.resolve();
       return;
     }
     this.elasticSearchRef.client.cat.indices(
@@ -28,18 +29,20 @@ export class ElasticIndex {
           return indexObjectArg.index.startsWith('smartlog');
         });
         const filteredIndexNames = filteredIndices.map(indexObjectArg => {
-          return indexObjectArg.name;
+          return indexObjectArg.index;
         });
         const todayAsUnix: number = Date.now();
         const rententionPeriodAsUnix: number = plugins.smarttime.units.days(
           this.elasticSearchRef.indexRetention
         );
+        console.log(filteredIndexNames);
         for (const indexName of filteredIndexNames) {
-          const regexResult = /^smartlog-([0-9]*)\.([0-9]*)\.([0-9]*)$/;
+          const regexResult = /^smartlog-([0-9]*)\.([0-9]*)\.([0-9]*)$/.exec(indexName);
           const dateAsUnix: number = new Date(
             `${regexResult[1]}-${regexResult[2]}-${regexResult[3]}`
           ).getTime();
           if (todayAsUnix - rententionPeriodAsUnix > dateAsUnix) {
+            console.log(`found old index ${indexName}`);
             const done2 = plugins.smartpromise.defer();
             this.elasticSearchRef.client.indices.delete({
               index: indexName
@@ -47,7 +50,8 @@ export class ElasticIndex {
               if(err2) {
                 console.log(err2);
               }
-              done.resolve();
+              console.log(`deleted ${indexName}`);
+              done2.resolve();
             });
             await done2.promise;
           }
