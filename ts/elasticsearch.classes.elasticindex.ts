@@ -44,15 +44,18 @@ export class ElasticIndex {
           if (todayAsUnix - rententionPeriodAsUnix > dateAsUnix) {
             console.log(`found old index ${indexName}`);
             const done2 = plugins.smartpromise.defer();
-            this.elasticSearchRef.client.indices.delete({
-              index: indexName
-            }, (err2, response2) => {
-              if(err2) {
-                console.log(err2);
+            this.elasticSearchRef.client.indices.delete(
+              {
+                index: indexName
+              },
+              (err2, response2) => {
+                if (err2) {
+                  console.log(err2);
+                }
+                console.log(`deleted ${indexName}`);
+                done2.resolve();
               }
-              console.log(`deleted ${indexName}`);
-              done2.resolve();
-            });
+            );
             await done2.promise;
           }
         }

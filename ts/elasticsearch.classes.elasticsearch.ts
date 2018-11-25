@@ -35,7 +35,7 @@ export class ElasticSearch<T> {
    */
   constructor(optionsArg: IElasticSearchConstructorOptions) {
     this.client = new ElasticClient({
-      host: this.computeHostString(optionsArg),
+      host: this.computeHostString(optionsArg)
       // log: 'trace'
     });
     this.indexPrefix = optionsArg.indexPrefix;
@@ -61,10 +61,10 @@ export class ElasticSearch<T> {
 
   public async log(logPackageArg: ILogPackage, scheduleOverwrite = false) {
     const now = new Date();
-    const indexToUse = `${this.indexPrefix}-${now.getFullYear()}.${('0' + (now.getMonth() + 1)).slice(-2)}.${(
-      '0' + now.getDate()
-    ).slice(-2)}`;
-
+    const indexToUse = `${this.indexPrefix}-${now.getFullYear()}.${(
+      '0' +
+      (now.getMonth() + 1)
+    ).slice(-2)}.${('0' + now.getDate()).slice(-2)}`;
 
     if (this.elasticScheduler.docsScheduled && !scheduleOverwrite) {
       this.elasticScheduler.scheduleDoc(logPackageArg);
@@ -94,11 +94,11 @@ export class ElasticSearch<T> {
     );
   }
 
-  get logDestination (): ILogDestination {
+  get logDestination(): ILogDestination {
     return {
       handleLog: (smartlogPackageArg: ILogPackage) => {
         this.log(smartlogPackageArg);
       }
-    }
+    };
   }
 }
