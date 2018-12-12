@@ -52,7 +52,8 @@ export class ElasticIndex {
           const done2 = plugins.smartpromise.defer();
           this.elasticSearchRef.client.indices.create(
             {
-              waitForActiveShards: '2',
+              
+              waitForActiveShards: '1',
               index: indexArg
             },
             (error, response) => {
