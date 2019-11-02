@@ -1,6 +1,6 @@
 {
   "name": "@mojoio/elasticsearch",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "private": false,
   "description": "log to elasticsearch in a kibana compatible format",
   "main": "dist/index.js",
