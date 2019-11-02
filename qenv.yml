@@ -1,4 +1,4 @@
-vars:
+required:
   - ELK_DOMAIN
   - ELK_PORT
   - ELK_USER
