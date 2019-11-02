@@ -2,5 +2,15 @@
   "npmci": {
     "npmGlobalTools": [],
     "npmAccessLevel": "public"
+  },
+  "gitzone": {
+    "module": {
+      "githost": "gitlab.com",
+      "gitscope": "mojoio",
+      "gitrepo": "elasticsearch",
+      "shortDescription": "log to elasticsearch in a kibana compatible format",
+      "npmPackagename": "@mojoio/elasticsearch",
+      "license": "MIT"
+    }
   }
 }

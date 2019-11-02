@@ -24,13 +24,13 @@ export class ElasticIndex {
         bytes: 'm'
       },
       async (err, responseArg: any[]) => {
-        if(err) {
+        if (err) {
           console.log(err);
           return;
         }
 
         // lets delete indexes that violate the retention
-        if(Array.isArray(responseArg)) {
+        if (Array.isArray(responseArg)) {
           const filteredIndices = responseArg.filter(indexObjectArg => {
             return indexObjectArg.index.startsWith('smartlog');
           });
@@ -41,8 +41,8 @@ export class ElasticIndex {
         }
 
         let index = null;
-        
-        if(Array.isArray(responseArg)) {
+
+        if (Array.isArray(responseArg)) {
           index = responseArg.find(indexObject => {
             return indexObject.index === indexArg;
           });
@@ -52,7 +52,6 @@ export class ElasticIndex {
           const done2 = plugins.smartpromise.defer();
           this.elasticSearchRef.client.indices.create(
             {
-              
               waitForActiveShards: '1',
               index: indexArg
             },
@@ -70,15 +69,13 @@ export class ElasticIndex {
     await done.promise;
   }
 
-  public createNewIndex(indexNameArg: string) {
-
-  }
+  public createNewIndex(indexNameArg: string) {}
 
   public async deleteOldIndices(indicesArray: string[]) {
     const todayAsUnix: number = Date.now();
-        const rententionPeriodAsUnix: number = plugins.smarttime.units.days(
-          this.elasticSearchRef.indexRetention
-        );
+    const rententionPeriodAsUnix: number = plugins.smarttime.units.days(
+      this.elasticSearchRef.indexRetention
+    );
     for (const indexName of indicesArray) {
       const regexResult = /^smartlog-([0-9]*)\.([0-9]*)\.([0-9]*)$/.exec(indexName);
       const dateAsUnix: number = new Date(
