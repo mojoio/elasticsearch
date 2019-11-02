@@ -10,11 +10,9 @@ tap.test('first test', async () => {
   testElasticLog = new elasticsearch.ElasticSearch({
     indexPrefix: 'smartlog',
     indexRetention: 7,
-    domain: process.env.ELK_DOMAIN,
-    port: parseInt(process.env.ELK_PORT, 10),
-    ssl: true,
-    user: process.env.ELK_USER,
-    pass: process.env.ELK_PASS
+    domain: testQenv.getEnvVarOnDemand('ELK_DOMAIN'),
+    port: parseInt(testQenv.getEnvVarOnDemand('ELK_PORT'), 10),
+    ssl: true
   });
   expect(testElasticLog).to.be.instanceOf(elasticsearch.ElasticSearch);
 });

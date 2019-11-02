@@ -35,7 +35,7 @@ export class ElasticSearch<T> {
    */
   constructor(optionsArg: IElasticSearchConstructorOptions) {
     this.client = new ElasticClient({
-      host: this.computeHostString(optionsArg)
+      host: this.computeHostString(optionsArg),
       // log: 'trace'
     });
     this.indexPrefix = optionsArg.indexPrefix;
@@ -56,6 +56,7 @@ export class ElasticSearch<T> {
     } else {
       hostString = `http://${hostString}`;
     }
+    console.log(hostString);
     return hostString;
   }
 
