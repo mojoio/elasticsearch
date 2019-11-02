@@ -30,7 +30,7 @@ tap.test('should send a message to Elasticsearch', async () => {
       runtime: 'node',
       zone: 'ship.zone'
     },
-    message: 'hi, this is a testMessage'
+    message: 'GET https://myroute.to.a.cool.destination/sorare?hello=there'
   });
 });
 
